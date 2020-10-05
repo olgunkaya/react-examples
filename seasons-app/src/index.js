@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import SeasonDisplay from "./SeasonDisplay";
+import Spinner from "./Spinner";
 
 /**
  * State is a JS object contains data related to our component
@@ -18,6 +19,16 @@ this is the first method to be called. But in reality it is no needed. Because b
         this.state = {
             message: "Loading...",
         };
+
+
+    !!!! class based components has props too. 
+    class Welcome extends React.Component {
+      render() {
+        return <h1>Hello, {this.props.name}</h1>;
+      }
+    }
+
+
     } */
 
   /**
@@ -28,7 +39,7 @@ this is the first method to be called. But in reality it is no needed. Because b
   componentDidMount() {
     window.navigator.geolocation.getCurrentPosition(
       (position) => {
-        this.setState({ lat: -1 });
+        this.setState({ lat: position.coords.latitude });
       },
       (error) => {
         // No need to update all properties in a state.
@@ -41,8 +52,7 @@ this is the first method to be called. But in reality it is no needed. Because b
     console.log(`Update args : ${args}`);
   }
 
-  // this has to be defined!
-  render() {
+  renderBody() {
     if (this.state.lat && !this.state.errorMessage) {
       return <SeasonDisplay lat={this.state.lat} />;
     }
@@ -50,7 +60,14 @@ this is the first method to be called. But in reality it is no needed. Because b
       return <div>Error : {this.state.errorMessage}</div>;
     }
 
-    return <div>Loading...</div>;
+    return <Spinner message="Please accept location request..." />;
+  }
+  /**
+   * do not include too much logic or multy return in a render method.
+   * Instead use helper functions to be able to reach them.
+   */
+  render() {
+    return <div>{this.renderBody()}</div>;
   }
 }
 
